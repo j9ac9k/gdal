@@ -15,6 +15,9 @@ concurrency:
 
 permissions:
   contents: read
+  attestations: write
+  packages: write
+  id-token: write
 
 jobs:
 
