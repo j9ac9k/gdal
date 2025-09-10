@@ -70,6 +70,8 @@ jobs:
             }
       - name: Build
         shell: bash -l {0}
+        env:
+          TARGET_IMAGE: j9ac9k/gdal
         run: |
           docker run --rm --privileged linuxkit/binfmt:v0.8
           cd docker/${{ matrix.image_name }}

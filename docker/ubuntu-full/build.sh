@@ -38,7 +38,7 @@ fi
 
 "${SCRIPT_DIR}/../util.sh" "$@" --test-python
 
-if test "${HAS_PLATFORM}" = "0" -a "${HAS_RELEASE}" = "0" -a "x${TARGET_IMAGE}" = "xj9ac9k/gdal:ubuntu-full"; then
+if test "${HAS_PLATFORM}" = "0" -a "${HAS_RELEASE}" = "0" -a "x${TARGET_IMAGE}" = "xosgeo/gdal:ubuntu-full"; then
  "${SCRIPT_DIR}/../util.sh" --platform linux/arm64 "$@" --test-python
 
  if test "$HAS_PUSH" = "1"; then
@@ -49,9 +49,9 @@ if test "${HAS_PLATFORM}" = "0" -a "${HAS_RELEASE}" = "0" -a "x${TARGET_IMAGE}" 
     ${DOCKER_REPO}/${TARGET_IMAGE}-latest-amd64 \
     ${DOCKER_REPO}/${TARGET_IMAGE}-latest-arm64
 
-   docker manifest rm ${DOCKER_REPO}/j9ac9k/gdal || /bin/true
-   docker buildx imagetools create -t ${DOCKER_REPO}/j9ac9k/gdal \
-    ${DOCKER_REPO}/j9ac9k/gdal:ubuntu-full-latest-amd64 \
-    ${DOCKER_REPO}/j9ac9k/gdal:ubuntu-full-latest-arm64
+  #  docker manifest rm ${DOCKER_REPO}/osgeo/gdal || /bin/true
+  #  docker buildx imagetools create -t ${DOCKER_REPO}/osgeo/gdal \
+  #   ${DOCKER_REPO}/osgeo/gdal:ubuntu-full-latest-amd64 \
+  #   ${DOCKER_REPO}/osgeo/gdal:ubuntu-full-latest-arm64
  fi
 fi

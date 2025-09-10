@@ -39,7 +39,7 @@ RELEASE=no
 ARCH_PLATFORMS="linux/amd64"
 DOCKER_REPO=ghcr.io
 
-GDAL_REPOSITORY=j9ac9k/gdal
+GDAL_REPOSITORY=osgeo/gdal
 
 while (( "$#" ));
 do
@@ -209,7 +209,7 @@ build_cmd()
     fi
 }
 
-if test "${TARGET_IMAGE}" = "j9ac9k/gdal:ubuntu-full"; then
+if test "${TARGET_IMAGE}" = "osgeo/gdal:ubuntu-full"; then
     PROJ_DATUMGRID_LATEST_LAST_MODIFIED=$(curl -Is https://cdn.proj.org/index.html | grep -i Last-Modified)
 else
     PROJ_DATUMGRID_LATEST_LAST_MODIFIED=$(curl -Is http://download.osgeo.org/proj/proj-datumgrid-latest.zip | grep -i Last-Modified)
@@ -276,7 +276,7 @@ if test "${RELEASE}" = "yes"; then
 
     if test "${BASE_IMAGE}" != ""; then
         BUILD_ARGS+=("--build-arg" "BASE_IMAGE=${BASE_IMAGE}")
-        if test "${TARGET_IMAGE}" = "j9ac9k/gdal:ubuntu-full" -o "${TARGET_IMAGE}" = "j9ac9k/gdal:ubuntu-small"; then
+        if test "${TARGET_IMAGE}" = "osgeo/gdal:ubuntu-full" -o "${TARGET_IMAGE}" = "osgeo/gdal:ubuntu-small"; then
           BUILD_ARGS+=("--build-arg" "TARGET_BASE_IMAGE=${BASE_IMAGE}")
         fi
     fi
@@ -310,10 +310,10 @@ else
     BUILD_ARGS+=("--build-arg" "WITH_CCACHE=1")
 
     IMAGE_NAME_WITH_ARCH="${REPO_IMAGE_NAME}"
-    if test "${IMAGE_NAME}" = "j9ac9k/gdal:ubuntu-full-latest" \
-         -o "${IMAGE_NAME}" = "j9ac9k/gdal:ubuntu-small-latest" \
-         -o "${IMAGE_NAME}" = "j9ac9k/gdal:alpine-small-latest" \
-         -o "${IMAGE_NAME}" = "j9ac9k/gdal:alpine-normal-latest"; then
+    if test "${IMAGE_NAME}" = "osgeo/gdal:ubuntu-full-latest" \
+         -o "${IMAGE_NAME}" = "osgeo/gdal:ubuntu-small-latest" \
+         -o "${IMAGE_NAME}" = "osgeo/gdal:alpine-small-latest" \
+         -o "${IMAGE_NAME}" = "osgeo/gdal:alpine-normal-latest"; then
         if test "${DOCKER_BUILDX}" != "buildx"; then
           ARCH_PLATFORM_ARCH=$(echo ${ARCH_PLATFORMS} | sed "s/linux\///")
           IMAGE_NAME_WITH_ARCH="${REPO_IMAGE_NAME}-${ARCH_PLATFORM_ARCH}"
@@ -344,7 +344,7 @@ else
 
         # Start a Docker container that has a rsync daemon, mounting HOST_CACHE_DIR
         if ! docker ps | grep "${RSYNC_DAEMON_CONTAINER}"; then
-            RSYNC_DAEMON_IMAGE=j9ac9k/gdal:gdal_rsync_daemon
+            RSYNC_DAEMON_IMAGE=osgeo/gdal:gdal_rsync_daemon
             docker rmi "${RSYNC_DAEMON_IMAGE}" 2>/dev/null || true
             docker $(build_cmd) -t "${RSYNC_DAEMON_IMAGE}" - <<EOF
 FROM alpine
@@ -382,11 +382,11 @@ EOF
 
     if test "${BASE_IMAGE}" != ""; then
         BUILD_ARGS+=("--build-arg" "BASE_IMAGE=${BASE_IMAGE}")
-        if test "${IMAGE_NAME}" = "j9ac9k/gdal:ubuntu-full-latest" -o "${IMAGE_NAME}" = "j9ac9k/gdal:ubuntu-small-latest"; then
+        if test "${IMAGE_NAME}" = "osgeo/gdal:ubuntu-full-latest" -o "${IMAGE_NAME}" = "osgeo/gdal:ubuntu-small-latest"; then
           BUILD_ARGS+=("--build-arg" "TARGET_BASE_IMAGE=${BASE_IMAGE}")
         fi
     else
-      if test "${DOCKER_BUILDX}" != "buildx" -a \( "${IMAGE_NAME}" = "j9ac9k/gdal:ubuntu-full-latest" -o "${IMAGE_NAME}" = "j9ac9k/gdal:ubuntu-small-latest" \); then
+      if test "${DOCKER_BUILDX}" != "buildx" -a \( "${IMAGE_NAME}" = "osgeo/gdal:ubuntu-full-latest" -o "${IMAGE_NAME}" = "osgeo/gdal:ubuntu-small-latest" \); then
         if test "${ARCH_PLATFORMS}" = "linux/arm64"; then
           BASE_IMAGE=$(grep "ARG BASE_IMAGE=" ${SCRIPT_DIR}/Dockerfile | sed "s/ARG BASE_IMAGE=//")
           echo "Fetching digest for ${BASE_IMAGE} ${ARCH_PLATFORMS}..."
@@ -397,7 +397,7 @@ EOF
           BUILD_ARGS+=("--build-arg" "TARGET_BASE_IMAGE=${BASE_IMAGE}@${TARGET_BASE_IMAGE_DIGEST}")
           # echo "${BUILD_ARGS[@]}"
         fi
-      elif test "${DOCKER_BUILDX}" != "buildx" -a \( "${IMAGE_NAME}" = "j9ac9k/gdal:alpine-small-latest" -o "${IMAGE_NAME}" = "j9ac9k/gdal:alpine-normal-latest" \); then
+      elif test "${DOCKER_BUILDX}" != "buildx" -a \( "${IMAGE_NAME}" = "osgeo/gdal:alpine-small-latest" -o "${IMAGE_NAME}" = "osgeo/gdal:alpine-normal-latest" \); then
         if test "${ARCH_PLATFORMS}" = "linux/arm64"; then
           ALPINE_VERSION=$(grep "ARG ALPINE_VERSION=" ${SCRIPT_DIR}/Dockerfile | sed "s/ARG ALPINE_VERSION=//")
           BASE_IMAGE="alpine:${ALPINE_VERSION}"
@@ -424,13 +424,13 @@ EOF
             docker push "${IMAGE_NAME_WITH_ARCH}"
         fi
 
-        if test "${IMAGE_NAME}" = "j9ac9k/gdal:ubuntu-full-latest"; then
+        if test "${IMAGE_NAME}" = "osgeo/gdal:ubuntu-full-latest"; then
             if test "${DOCKER_BUILDX}" = "buildx"; then
-                docker $(build_cmd) "${BUILD_ARGS[@]}" -t "${DOCKER_REPO}/j9ac9k/gdal:latest" --push "${SCRIPT_DIR}"
+                docker $(build_cmd) "${BUILD_ARGS[@]}" -t "${DOCKER_REPO}/osgeo/gdal:latest" --push "${SCRIPT_DIR}"
             else
                 if test "${ARCH_PLATFORMS}" = "linux/amd64"; then
-                    docker image tag "${IMAGE_NAME_WITH_ARCH}" "${DOCKER_REPO}/j9ac9k/gdal:latest"
-                    docker push "${DOCKER_REPO}/j9ac9k/gdal:latest"
+                    docker image tag "${IMAGE_NAME_WITH_ARCH}" "${DOCKER_REPO}/osgeo/gdal:latest"
+                    docker push "${DOCKER_REPO}/osgeo/gdal:latest"
                 fi
             fi
         fi
@@ -442,10 +442,10 @@ EOF
         docker rmi "${OLD_IMAGE_ID}"
     fi
 
-    if test "${IMAGE_NAME}" = "j9ac9k/gdal:ubuntu-full-latest" \
-         -o "${IMAGE_NAME}" = "j9ac9k/gdal:ubuntu-small-latest" \
-         -o "${IMAGE_NAME}" = "j9ac9k/gdal:alpine-small-latest" \
-         -o "${IMAGE_NAME}" = "j9ac9k/gdal:alpine-normal-latest"; then
+    if test "${IMAGE_NAME}" = "osgeo/gdal:ubuntu-full-latest" \
+         -o "${IMAGE_NAME}" = "osgeo/gdal:ubuntu-small-latest" \
+         -o "${IMAGE_NAME}" = "osgeo/gdal:alpine-small-latest" \
+         -o "${IMAGE_NAME}" = "osgeo/gdal:alpine-normal-latest"; then
         if test "${DOCKER_BUILDX}" != "buildx" -a "${ARCH_PLATFORMS}" = "linux/amd64"; then
           docker image tag "${IMAGE_NAME_WITH_ARCH}" "${REPO_IMAGE_NAME}"
         fi
