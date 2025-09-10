@@ -31,14 +31,14 @@ if echo "$*" | grep "\-\-release" > /dev/null; then
   HAS_RELEASE=1
 fi
 
-HAS_PUSH=0
+HAS_PUSH=1
 if echo "$*" | grep "\-\-push" > /dev/null; then
   HAS_PUSH=1
 fi
 
 "${SCRIPT_DIR}/../util.sh" "$@"
 
-if test "${HAS_PLATFORM}" = "0" -a "${HAS_RELEASE}" = "0" -a "x${TARGET_IMAGE}" = "xosgeo/gdal:alpine-small"; then
+if test "${HAS_PLATFORM}" = "0" -a "${HAS_RELEASE}" = "0" -a "x${TARGET_IMAGE}" = "xj9ac9k/gdal:alpine-small"; then
  "${SCRIPT_DIR}/../util.sh" --platform linux/arm64 "$@"
 
  if test "$HAS_PUSH" = "1"; then

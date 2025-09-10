@@ -31,7 +31,7 @@ if echo "$*" | grep "\-\-release" > /dev/null; then
   HAS_RELEASE=1
 fi
 
-HAS_PUSH=0
+HAS_PUSH=1
 if echo "$*" | grep "\-\-push" > /dev/null; then
   HAS_PUSH=1
 fi
