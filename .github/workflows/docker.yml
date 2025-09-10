@@ -67,7 +67,7 @@ jobs:
           if test "${{ matrix.name }}" = "ubuntu-full-amd64-proprietary-sdks"; then
             ./build.sh --platform linux/${{ matrix.arch }} --with-oracle --with-mrsid --with-ecw
           else
-            ./build.sh --platform linux/${{ matrix.arch }}
+            ./build.sh --platform linux/${{ matrix.arch }} --with-multi-arch
           fi
-          docker run --rm ghcr.io/osgeo/gdal:${{ matrix.image_name }}-latest-${{ matrix.arch }} gdalinfo --formats
-          docker run --rm ghcr.io/osgeo/gdal:${{ matrix.image_name }}-latest-${{ matrix.arch }} ogrinfo --formats
+          docker run --rm ghcr.io/j9ac9k/gdal:${{ matrix.image_name }}-latest-${{ matrix.arch }} gdalinfo --formats
+          docker run --rm ghcr.io/j9ac9k/gdal:${{ matrix.image_name }}-latest-${{ matrix.arch }} ogrinfo --formats

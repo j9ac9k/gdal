@@ -40,8 +40,6 @@ ARCH_PLATFORMS="linux/amd64"
 DOCKER_REPO=ghcr.io
 
 GDAL_REPOSITORY=j9ac9k/gdal
-DOCKER_BUILDKIT=1
-DOCKER_CLI_EXPERIMENTAL=enabled
 
 while (( "$#" ));
 do
