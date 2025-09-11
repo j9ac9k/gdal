@@ -89,9 +89,9 @@ jobs:
           docker run --rm --privileged linuxkit/binfmt:v0.8
           cd docker/${{ matrix.image_name }}
           if test "${{ matrix.name }}" = "ubuntu-full-amd64-proprietary-sdks"; then
-            ./build.sh --platform linux/${{ matrix.arch }} --with-multi-arch --gdal-repository j9ac9k/gdal --with-oracle --with-mrsid --with-ecw
+            ./build.sh --with-multi-arch --gdal-repository j9ac9k/gdal --with-oracle --with-mrsid --with-ecw
           else
-            ./build.sh --platform linux/${{ matrix.arch }} --with-multi-arch --gdal-repository j9ac9k/gdal
+            ./build.sh --with-multi-arch --gdal-repository j9ac9k/gdal
           fi
           docker run --rm ghcr.io/j9ac9k/gdal:${{ matrix.image_name }}-latest-${{ matrix.arch }} gdalinfo --formats
           docker run --rm ghcr.io/j9ac9k/gdal:${{ matrix.image_name }}-latest-${{ matrix.arch }} ogrinfo --formats
