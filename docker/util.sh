@@ -39,7 +39,7 @@ RELEASE=no
 ARCH_PLATFORMS="linux/amd64"
 DOCKER_REPO=ghcr.io
 
-GDAL_REPOSITORY=osgeo/gdal
+GDAL_REPOSITORY=OSGeo/gdal
 
 while (( "$#" ));
 do
@@ -285,8 +285,8 @@ if test "${RELEASE}" = "yes"; then
        "--label" "org.opencontainers.image.description=GDAL is an open source MIT licensed translator library for raster and vector geospatial data formats." \
        "--label" "org.opencontainers.image.title=GDAL ${TARGET_IMAGE}" \
        "--label" "org.opencontainers.image.licenses=MIT" \
-       "--label" "org.opencontainers.image.source=https://github.com/${GDAL_REPOSITORY}" \
-       "--label" "org.opencontainers.image.url=https://github.com/${GDAL_REPOSITORY}" \
+       "--label" "org.opencontainers.image.source=https://github.com/j9ac9k/gdal" \
+       "--label" "org.opencontainers.image.url=https://github.com/j9ac9k/gdal" \
        "--label" "org.opencontainers.image.revision=${GDAL_VERSION}" \
        "--label" "org.opencontainers.image.version=${TAG_NAME}" \
     )
