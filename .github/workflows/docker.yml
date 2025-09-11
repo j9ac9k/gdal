@@ -13,11 +13,7 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.head_ref || github.ref }}
   cancel-in-progress: true
 
-permissions:
-  contents: read
-  attestations: write
-  packages: write
-  id-token: write
+
 
 jobs:
 
@@ -60,6 +56,11 @@ jobs:
     name: ${{ matrix.name }}
 
     runs-on: ${{ matrix.gha_image }}
+    permissions:
+      contents: read
+      attestations: write
+      packages: write
+      id-token: write
 
     steps:
       - name: Checkout
@@ -88,7 +89,7 @@ jobs:
           docker run --rm --privileged linuxkit/binfmt:v0.8
           cd docker/${{ matrix.image_name }}
           if test "${{ matrix.name }}" = "ubuntu-full-amd64-proprietary-sdks"; then
-            ./build.sh --platform linux/${{ matrix.arch }} --with-oracle --with-mrsid --with-ecw
+            ./build.sh --platform linux/${{ matrix.arch }} --with-multi-arch --with-oracle --with-mrsid --with-ecw
           else
             ./build.sh --platform linux/${{ matrix.arch }} --with-multi-arch
           fi
