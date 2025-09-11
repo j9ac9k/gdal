@@ -19,7 +19,7 @@ esac
 
 export SCRIPT_DIR
 TAG_NAME=$(basename "${SCRIPT_DIR}")
-export TARGET_IMAGE=${TARGET_IMAGE:-osgeo/gdal:${TAG_NAME}}
+export TARGET_IMAGE=${TARGET_IMAGE:-j9ac9k/gdal:${TAG_NAME}}
 
 HAS_PLATFORM=0
 if echo "$*" | grep "\-\-platform" > /dev/null; then
@@ -31,23 +31,22 @@ if echo "$*" | grep "\-\-release" > /dev/null; then
   HAS_RELEASE=1
 fi
 
-HAS_PUSH=0
+HAS_PUSH=1
 if echo "$*" | grep "\-\-push" > /dev/null; then
   HAS_PUSH=1
 fi
 
 "${SCRIPT_DIR}/../util.sh" "$@"
 
-if test "${HAS_PLATFORM}" = "0" -a "${HAS_RELEASE}" = "0" -a "x${TARGET_IMAGE}" = "xosgeo/gdal:alpine-small"; then
- "${SCRIPT_DIR}/../util.sh" --platform linux/arm64 "$@"
-
- if test "$HAS_PUSH" = "1"; then
-   DOCKER_REPO=$(cat /tmp/gdal_docker_repo.txt)
-
-   docker manifest rm ${DOCKER_REPO}/${TARGET_IMAGE}-latest || /bin/true
-   docker manifest create ${DOCKER_REPO}/${TARGET_IMAGE}-latest \
-     --amend ${DOCKER_REPO}/${TARGET_IMAGE}-latest-amd64 \
-     --amend ${DOCKER_REPO}/${TARGET_IMAGE}-latest-arm64
-   docker manifest push ${DOCKER_REPO}/${TARGET_IMAGE}-latest
- fi
+if test "${HAS_PLATFORM}" = "1" -a "${HAS_RELEASE}" = "0" -a "x${TARGET_IMAGE}" = "xj9ac9k/gdal:alpine-small"; then
+ "${SCRIPT_DIR}/../util.sh"  --platform linux/arm64 "$@" --test-python
 fi
+
+DOCKER_REPO=$(cat /tmp/gdal_docker_repo.txt)
+
+docker manifest rm ${DOCKER_REPO}/${TARGET_IMAGE}-latest || /bin/true
+docker buildx imagetools create -t ${DOCKER_REPO}/${TARGET_IMAGE}-latest \
+${DOCKER_REPO}/${TARGET_IMAGE}-latest-amd64 \
+${DOCKER_REPO}/${TARGET_IMAGE}-latest-arm64
+
+

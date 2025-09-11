@@ -157,7 +157,7 @@ echo "${DOCKER_REPO}" > /tmp/gdal_docker_repo.txt
 
 if test "${DOCKER_BUILDKIT}" = "1" && test "${DOCKER_CLI_EXPERIMENTAL}" = "enabled"; then
   DOCKER_BUILDX="buildx"
-  DOCKER_BUILDX_ARGS=("--platform" "${ARCH_PLATFORMS}")
+  DOCKER_BUILDX_ARGS=("--platform" "${ARCH_PLATFORMS}" "--sbom" "true" "--provenance" "true")
 fi
 
 if test "${RELEASE}" = "yes"; then
@@ -285,8 +285,8 @@ if test "${RELEASE}" = "yes"; then
        "--label" "org.opencontainers.image.description=GDAL is an open source MIT licensed translator library for raster and vector geospatial data formats." \
        "--label" "org.opencontainers.image.title=GDAL ${TARGET_IMAGE}" \
        "--label" "org.opencontainers.image.licenses=MIT" \
-       "--label" "org.opencontainers.image.source=https://github.com/${GDAL_REPOSITORY}" \
-       "--label" "org.opencontainers.image.url=https://github.com/${GDAL_REPOSITORY}" \
+       "--label" "org.opencontainers.image.source=https://github.com/j9ac9k/gdal" \
+       "--label" "org.opencontainers.image.url=https://github.com/j9ac9k/gdal" \
        "--label" "org.opencontainers.image.revision=${GDAL_VERSION}" \
        "--label" "org.opencontainers.image.version=${TAG_NAME}" \
     )
