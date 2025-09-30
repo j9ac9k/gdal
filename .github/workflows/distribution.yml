@@ -1,0 +1,44 @@
+name: Make Distribution
+
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  make_distribution:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+      - name: Configure GPG Key
+        run: |
+          echo -n "$GPG_SIGNING_KEY" | base64 --decode | gpg --import
+        env:
+          GPG_SIGNING_KEY: ${{ secrets.GPG_SIGNING_KEY }}
+      - name: Install Dependencies
+        shell: bash
+        run: |
+          apt-get update && \
+          apt-get install -y --allow-unauthenticated \
+          swig
+      - name: Run mkgdaldist
+        shell: bash -l {0}
+        run: |
+          # export RC=$(python3 -c "print('' if 'RC' not in '$github.ref_name' else ''.join('$github.ref_name'.rpartition('RC')[1:].lower()))")
+          # export VERSION=$(python3 -c "print('$github.ref_name'.lstrip('v').partition('RC')[0])")
+
+          export VERSION="v3.10.12"
+
+          if test "$RC" != ""; then
+            ./mkgdaldist.sh $VERSION -tag ${{ github.ref_name }} -rc $RC
+          else
+            ./mkgdaldist.sh $VERSION
+          fi
+
