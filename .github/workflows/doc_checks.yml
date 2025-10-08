@@ -18,7 +18,7 @@ jobs:
   docs:
     name: Documentation checks
 
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04-arm
     strategy:
       fail-fast: true
     container: ubuntu:24.04
